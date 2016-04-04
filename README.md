@@ -54,9 +54,17 @@ Calling:
 Output is:
 
     setUp 999
+    symbol: _TFC10TestRunner5Tests5setUpfT_T_
+    symbol: _TFC10TestRunner5Tests8tearDownfT_T_
+    symbol: _TFC10TestRunner5Tests10testThing1fT_T_
     testThing1 999
+    symbol: _TFC10TestRunner5Tests16someOtherMethod1fT_T_
+    symbol: _TFC10TestRunner5Tests10testThing2fT_T_
     testThing2 999
+    symbol: _TFC10TestRunner5Tests16someOtherMethod2fT_T_
+    symbol: _TFC10TestRunner5Tests10testThing3fT_T_
     testThing3 999
+    symbol: _TFC10TestRunner5TestscfT_S0_
     tearDown 999
 
 Should work Linux. callMethodsMatchingPattern would live in stdlib somewhere. MIT Licensed.

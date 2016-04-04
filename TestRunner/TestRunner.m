@@ -66,10 +66,12 @@ void callMethodsMatchingPattern( id object, const char *pattern ) {
 
     Dl_info info;
     for ( IMP *sym_ptr = sym_start ; sym_ptr < sym_end ; sym_ptr++ )
-        if ( dladdr( *sym_ptr, &info ) && info.dli_sname )
+        if ( dladdr( *sym_ptr, &info ) && info.dli_sname ) {
+            printf( "symbol: %s\n", info.dli_sname );
             // if method symbol contains pattern, call it
             if ( strstr( info.dli_sname, pattern ) != 0 ) {
                 void (*test)( id ) = (void (*)( id ))*sym_ptr;
                 test( object );
             }
+        }
 }
