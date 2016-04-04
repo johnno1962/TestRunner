@@ -67,4 +67,4 @@ Output is:
     symbol: _TFC10TestRunner5TestscfT_S0_
     tearDown 999
 
-Should work Linux. callMethodsMatchingPattern would live in stdlib somewhere. MIT Licensed.
+Should work on Linux, callMethodsMatchingPattern() would live in stdlib or xctest. MIT Licensed.
