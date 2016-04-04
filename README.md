@@ -46,8 +46,9 @@ class Tests {
 Calling:
 ```Swift
     let test = Tests()
-    test.setupTests()
+    test.setUp()
     callMethodsMatchingPattern( test, "test" )
+    test.tearDown()
 ```
     
 Output is:
