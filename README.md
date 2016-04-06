@@ -47,7 +47,7 @@ Calling:
 ```Swift
     let test = Tests()
     test.setUp()
-    callMethodsMatchingPattern( test, "test" )
+    callMethodsMatchingPattern( test, "^_TFC\\d+TestRunner\\d+Tests\\d+test" )
     test.tearDown()
 ```
     
