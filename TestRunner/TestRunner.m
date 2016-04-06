@@ -8,16 +8,16 @@
 
 #import "TestRunner.h"
 
-#import <objc/runtime.h>
-#import <stdint.h>
+#import <Foundation/Foundation.h>
 #import <dlfcn.h>
+#import <regex.h>
 
 // Thanks to Jay Freeman's https://www.youtube.com/watch?v=Ii-02vhsdVk
 // actual version of struct is in "include/swift/Runtime/Metadata.h"
 
 struct ClassMetadata {
 
-    Class MetaClass, SuperClass;
+    struct ClassMetadata *MetaClass, *SuperClass;
     void *CacheData[2];
     uintptr_t Data;
 
@@ -58,20 +58,36 @@ struct ClassMetadata {
 
 void callMethodsMatchingPattern( id object, const char *pattern ) {
 
-    struct ClassMetadata *swiftClass = (__bridge struct ClassMetadata *)object_getClass( object );
+    struct ClassMetadata *swiftClass = *(struct ClassMetadata **)(__bridge void *)object;
 
-    // locate method distaptch table in ClassMetadata
+    if ( !(swiftClass->Data & 0x1) ) {
+        NSLog( @"Object is not instance of Swift class" );
+        return;
+    }
+    
+    regex_t regex;
+    int error = regcomp( &regex, pattern, REG_EXTENDED|REG_ENHANCED );
+    if ( error != 0 ) {
+        char errbuff[PATH_MAX];
+        regerror( error, &regex, errbuff, sizeof errbuff );
+        NSLog( @"Regex %s compile error %s", pattern, errbuff );
+        return;
+    }
+
+    // locate method distpatch table in ClassMetadata
     IMP *sym_start = swiftClass->dispatch,
-        *sym_end = (IMP *)((char *)swiftClass + swiftClass->ClassSize - 2*sizeof(IMP));
+        *sym_end = (IMP *)((char *)swiftClass - swiftClass->ClassAddressPoint + swiftClass->ClassSize);
 
     Dl_info info;
     for ( IMP *sym_ptr = sym_start ; sym_ptr < sym_end ; sym_ptr++ )
         if ( dladdr( *sym_ptr, &info ) && info.dli_sname ) {
             printf( "symbol: %s\n", info.dli_sname );
             // if method symbol contains pattern, call it
-            if ( strstr( info.dli_sname, pattern ) != 0 ) {
+            if ( regexec( &regex, info.dli_sname, 0, NULL, 0 ) == 0 ) {
                 void (*test)( id ) = (void (*)( id ))*sym_ptr;
                 test( object );
             }
         }
+
+    regfree( &regex );
 }

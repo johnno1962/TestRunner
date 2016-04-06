@@ -51,10 +51,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
 
-
         let test = Tests()
         test.setUp()
-        callMethodsMatchingPattern( test, "test" )
+        callMethodsMatchingPattern( test, "^_TFC\\d+TestRunner\\d+Tests\\d+test" )
         test.tearDown()
 
         return true

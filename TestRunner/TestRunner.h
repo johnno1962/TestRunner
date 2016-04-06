@@ -6,6 +6,4 @@
 //  Copyright © 2016 John Holdsworth. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
 extern void callMethodsMatchingPattern( id object, const char *pattern );
