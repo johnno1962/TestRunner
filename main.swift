@@ -2,6 +2,9 @@
 
 import Foundation
 
+typealias SIMP = (@convention(c) ( AnyObject! ) -> Void)?
+
+// needs to be kept in sync with include/swift/Runtime/Metadata.h
 private struct ClassMetadataSwift {
 
     let MetaClass = UnsafePointer<ClassMetadataSwift>(nil), SuperClass = UnsafePointer<ClassMetadataSwift>(nil);
@@ -41,7 +44,7 @@ private struct ClassMetadataSwift {
 
     /// A function for destroying instance variables, used to clean up
     /// after an early return from a constructor.
-    var dispatch = UnsafePointer<Void>(nil)
+    var IVarDestroyer: SIMP = nil
 }
 
 struct Dl_info {
@@ -71,21 +74,19 @@ func callMethodsMatchingPatternPureSwift( object: AnyObject, _ pattern: UnsafePo
         return
     }
 
-    withUnsafePointer(&id.memory.memory.dispatch) {
+    withUnsafePointer(&id.memory.memory.IVarDestroyer) {
         (sym_start) in
-        let sym_end = UnsafePointer<UnsafePointer<Void>>(UnsafePointer<Int8>(id.memory) +
+        let sym_end = UnsafePointer<SIMP>(UnsafePointer<Int8>(id.memory) +
             -Int(id.memory.memory.ClassAddressPoint) + Int(id.memory.memory.ClassSize))
 
         var info = Dl_info()
         for i in 0..<(sym_end-sym_start) {
-            if sym_start[i] != nil {
-                let vptr = UnsafePointer<Int8>(bitPattern: unsafeBitCast(sym_start[i], UInt.self))
+            if let fptr = sym_start[i] {
+                let vptr = UnsafePointer<Int8>(bitPattern: unsafeBitCast(fptr, UInt.self))
                 if dladdr(vptr, &info) != 0 && info.dli_sname != nil {
                     print("symbol: \(String.fromCString(info.dli_sname)!)")
                     if regexec(&regex, info.dli_sname, 0, nil, 0) == 0 {
-                        typealias SIMP = @convention(c) ( AnyObject! ) -> Void
-                        let sptr = unsafeBitCast(sym_start[i], SIMP.self)
-                        sptr(object)
+                        fptr(object)
                     }
                 }
             }
