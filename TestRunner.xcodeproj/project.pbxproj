@@ -17,6 +17,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BB047FE51CB6AC27008CFD24 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = SOURCE_ROOT; };
+		BB047FE61CB6AC27008CFD24 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = SOURCE_ROOT; };
 		BB2D1EE61CB2340A00F94D26 /* TestRunner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestRunner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB2D1EE91CB2340A00F94D26 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BB2D1EEB1CB2340A00F94D26 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -62,6 +64,8 @@
 		BB2D1EE81CB2340A00F94D26 /* TestRunner */ = {
 			isa = PBXGroup;
 			children = (
+				BB047FE51CB6AC27008CFD24 /* main.swift */,
+				BB047FE61CB6AC27008CFD24 /* Package.swift */,
 				BB2D1EFC1CB2345A00F94D26 /* TestRunner.h */,
 				BB2D1EFD1CB2345A00F94D26 /* TestRunner.m */,
 				BB6548E31CB6620F008D547C /* TestRunner.swift */,

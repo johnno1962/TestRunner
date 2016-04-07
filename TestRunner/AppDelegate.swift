@@ -65,6 +65,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         callMethodsMatchingPatternSwift(test, "^_TFC\\d+TestRunner\\d+Tests\\d+test")
         test.tearDown()
 
+        test.setUp()
+        callMethodsMatchingPatternPureSwift(test, "^_TFC\\d+TestRunner\\d+Tests\\d+test")
+        test.tearDown()
+
         return true
     }
 

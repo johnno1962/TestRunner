@@ -5,7 +5,28 @@ An example of how methods can be called on the basis of their name using only Me
 
 Class has vtable (dispatch) for Swift methods. Symbol name for function can be determined from pointer and demangled to filter names.
 
-Given test class in AppDelegate.swift:
+Pure Swift version tested and works on Linux...
+
+    $ swift build -Xlinker -export-dyanmic
+    $ ./build/debug/TestRunner
+    setUp 0
+    symbol: _TFC10TestRunner5Testsg4ivarSi
+    symbol: _TFC10TestRunner5Testss4ivarSi
+    symbol: _TFC10TestRunner5Testsm4ivarSi
+    symbol: _TFC10TestRunner5Tests5setUpfT_T_
+    symbol: _TFC10TestRunner5Tests8tearDownfT_T_
+    symbol: _TFC10TestRunner5Tests10testThing1fT_T_
+    testThing1 1
+    symbol: _TFC10TestRunner5Tests16someOtherMethod1fT_T_
+    symbol: _TFC10TestRunner5Tests10testThing2fT_T_
+    testThing2 2
+    symbol: _TFC10TestRunner5Tests16someOtherMethod2fT_T_
+    symbol: _TFC10TestRunner5Tests10testThing3fT_T_
+    testThing3 3
+    symbol: _TFC10TestRunner5TestscfT_S0_
+    tearDown 3
+
+Given the test class in main.swift:
 
 ```Swift
 class Tests {
@@ -45,54 +66,13 @@ class Tests {
     }
 
 }
-```
 
-Calling:
-```Swift
 let test = Tests()
 
 test.setUp()
-callMethodsMatchingPattern(test, "^_TFC\\d+TestRunner\\d+Tests\\d+test")
-test.tearDown()
-
-test.setUp()
-callMethodsMatchingPatternSwift(test, "^_TFC\\d+TestRunner\\d+Tests\\d+test")
+callMethodsMatchingPatternPureSwift(test,
+    "^_TFC[0-9]+TestRunner[0-9]+Tests[0-9]+test")
 test.tearDown()
 ```
-    
-Output is:
 
-    setUp 0
-    symbol: _TFC10TestRunner5Testsg4ivarSi
-    symbol: _TFC10TestRunner5Testss4ivarSi
-    symbol: _TFC10TestRunner5Testsm4ivarSi
-    symbol: _TFC10TestRunner5Tests5setUpfT_T_
-    symbol: _TFC10TestRunner5Tests8tearDownfT_T_
-    symbol: _TFC10TestRunner5Tests10testThing1fT_T_
-    testThing1 1
-    symbol: _TFC10TestRunner5Tests16someOtherMethod1fT_T_
-    symbol: _TFC10TestRunner5Tests10testThing2fT_T_
-    testThing2 2
-    symbol: _TFC10TestRunner5Tests16someOtherMethod2fT_T_
-    symbol: _TFC10TestRunner5Tests10testThing3fT_T_
-    testThing3 3
-    symbol: _TFC10TestRunner5TestscfT_S0_
-    tearDown 3
-    setUp 0
-    symbol: _TFC10TestRunner5Testsg4ivarSi
-    symbol: _TFC10TestRunner5Testss4ivarSi
-    symbol: _TFC10TestRunner5Testsm4ivarSi
-    symbol: _TFC10TestRunner5Tests5setUpfT_T_
-    symbol: _TFC10TestRunner5Tests8tearDownfT_T_
-    symbol: _TFC10TestRunner5Tests10testThing1fT_T_
-    testThing1 1
-    symbol: _TFC10TestRunner5Tests16someOtherMethod1fT_T_
-    symbol: _TFC10TestRunner5Tests10testThing2fT_T_
-    testThing2 2
-    symbol: _TFC10TestRunner5Tests16someOtherMethod2fT_T_
-    symbol: _TFC10TestRunner5Tests10testThing3fT_T_
-    testThing3 3
-    symbol: _TFC10TestRunner5TestscfT_S0_
-    tearDown 3
-
-Should work on Linux, callMethodsMatchingPattern() would live in stdlib or xctest. MIT Licensed.
+callMethodsMatchingPatternPureSwift() could live in stdlib or xctest. MIT Licensed.

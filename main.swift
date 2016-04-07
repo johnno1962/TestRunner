@@ -1,55 +1,8 @@
-//
-//  TestRunner.swift
-//  TestRunner
-//
-//  Created by John Holdsworth on 07/04/2016.
-//  Copyright © 2016 John Holdsworth. All rights reserved.
-//
+#!/usr/bin/env xcrun swift
 
 import Foundation
 
-func callMethodsMatchingPatternSwift( object: AnyObject, _ pattern: UnsafePointer<Int8> ) {
-    let id = UnsafePointer<UnsafeMutablePointer<ClassMetadata>>( Unmanaged.passUnretained(object).toOpaque() )
-
-    if (id.memory.memory.Data & 0x1) == 0 {
-        print("Object is not instance of Swift class")
-        return
-    }
-
-    var regex = regex_t()
-    let error = regcomp(&regex, pattern, REG_EXTENDED|REG_ENHANCED)
-    if error != 0 {
-        var errbuff = [Int8]( count:1000, repeatedValue: 0 )
-        regerror(error, &regex, &errbuff, errbuff.count)
-        print("Regex \(String.fromCString(pattern)) compile error \(String.fromCString(errbuff))")
-        return
-    }
-
-    withUnsafePointer(&id.memory.memory.dispatch.0) {
-        (sym_start) in
-        let sym_end = UnsafePointer<IMP>(UnsafePointer<Int8>(id.memory) +
-            -Int(id.memory.memory.ClassAddressPoint) + Int(id.memory.memory.ClassSize))
-
-        var info = Dl_info()
-        for i in 0..<(sym_end-sym_start) {
-            if sym_start[i] != nil {
-                let vptr = UnsafePointer<Void>(bitPattern: unsafeBitCast(sym_start[i], UInt.self))
-                if dladdr(vptr, &info) != 0 && info.dli_sname != nil {
-                    print("symbol: \(String.fromCString(info.dli_sname)!)")
-                    if regexec(&regex, info.dli_sname, 0, nil, 0) == 0 {
-                        typealias SIMP = @convention(c) ( AnyObject! ) -> Void
-                        let sptr = unsafeBitCast(sym_start[i], SIMP.self)
-                        sptr(object)
-                    }
-                }
-            }
-        }
-    }
-
-    regfree( &regex )
-}
-
-struct ClassMetadataSwift {
+private struct ClassMetadataSwift {
 
     let MetaClass = UnsafePointer<ClassMetadataSwift>(nil), SuperClass = UnsafePointer<ClassMetadataSwift>(nil);
     let CacheData1 = UnsafePointer<Void>(nil), CacheData2 = UnsafePointer<Void>(nil)
@@ -88,10 +41,18 @@ struct ClassMetadataSwift {
 
     /// A function for destroying instance variables, used to clean up
     /// after an early return from a constructor.
-    var dispatch: IMP = nil
+    var dispatch = UnsafePointer<Void>(nil)
 }
 
+struct Dl_info {
+    let dli_fname = UnsafePointer<Int8>(nil)
+    let dli_fbase = UnsafePointer<Void>(nil)
+    let dli_sname = UnsafePointer<Int8>(nil)
+    let dli_saddr = UnsafePointer<Void>(nil)
+}
 
+@_silgen_name("dladdr")
+func dladdr( ptr: UnsafePointer<Void>, _ info: UnsafeMutablePointer<Dl_info> ) -> CInt
 
 func callMethodsMatchingPatternPureSwift( object: AnyObject, _ pattern: UnsafePointer<Int8> ) {
     let id = UnsafePointer<UnsafeMutablePointer<ClassMetadataSwift>>( Unmanaged.passUnretained(object).toOpaque() )
@@ -102,7 +63,7 @@ func callMethodsMatchingPatternPureSwift( object: AnyObject, _ pattern: UnsafePo
     }
 
     var regex = regex_t()
-    let error = regcomp(&regex, pattern, REG_EXTENDED|REG_ENHANCED)
+    let error = regcomp(&regex, pattern, REG_EXTENDED)
     if error != 0 {
         var errbuff = [Int8]( count:1000, repeatedValue: 0 )
         regerror(error, &regex, &errbuff, errbuff.count)
@@ -112,13 +73,13 @@ func callMethodsMatchingPatternPureSwift( object: AnyObject, _ pattern: UnsafePo
 
     withUnsafePointer(&id.memory.memory.dispatch) {
         (sym_start) in
-        let sym_end = UnsafePointer<IMP>(UnsafePointer<Int8>(id.memory) +
+        let sym_end = UnsafePointer<UnsafePointer<Void>>(UnsafePointer<Int8>(id.memory) +
             -Int(id.memory.memory.ClassAddressPoint) + Int(id.memory.memory.ClassSize))
 
         var info = Dl_info()
         for i in 0..<(sym_end-sym_start) {
             if sym_start[i] != nil {
-                let vptr = UnsafePointer<Void>(bitPattern: unsafeBitCast(sym_start[i], UInt.self))
+                let vptr = UnsafePointer<Int8>(bitPattern: unsafeBitCast(sym_start[i], UInt.self))
                 if dladdr(vptr, &info) != 0 && info.dli_sname != nil {
                     print("symbol: \(String.fromCString(info.dli_sname)!)")
                     if regexec(&regex, info.dli_sname, 0, nil, 0) == 0 {
@@ -133,3 +94,48 @@ func callMethodsMatchingPatternPureSwift( object: AnyObject, _ pattern: UnsafePo
 
     regfree( &regex )
 }
+
+class Tests {
+
+    var ivar = 999
+
+    func setUp() {
+        ivar = 0
+        print( "setUp \(ivar)" )
+    }
+
+    func tearDown() {
+        print( "tearDown \(ivar)" )
+    }
+
+    func testThing1() {
+        ivar += 1
+        print( "testThing1 \(ivar)" )
+    }
+
+    func someOtherMethod1() {
+        print( "someOtherMethod1 \(ivar)" )
+    }
+
+    func testThing2() {
+        ivar += 1
+        print( "testThing2 \(ivar)" )
+    }
+
+    func someOtherMethod2() {
+        print( "someOtherMethod2 \(ivar)" )
+    }
+
+    func testThing3() {
+        ivar += 1
+        print( "testThing3 \(ivar)" )
+    }
+
+}
+
+let test = Tests()
+
+test.setUp()
+callMethodsMatchingPatternPureSwift(test,
+   "^_TFC[0-9]+TestRunner[0-9]+Tests[0-9]+test")
+test.tearDown()

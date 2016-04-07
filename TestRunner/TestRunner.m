@@ -30,11 +30,11 @@ void callMethodsMatchingPattern( id object, const char *pattern ) {
     }
 
     // locate method distpatch table in ClassMetadata
-    SIMP *sym_start = swiftClass->dispatch,
-        *sym_end = (SIMP *)((char *)swiftClass - swiftClass->ClassAddressPoint + swiftClass->ClassSize);
+    IMP *sym_start = swiftClass->dispatch,
+        *sym_end = (IMP *)((char *)swiftClass - swiftClass->ClassAddressPoint + swiftClass->ClassSize);
 
     Dl_info info;
-    for ( SIMP *sym_ptr = sym_start ; sym_ptr < sym_end ; sym_ptr++ )
+    for ( IMP *sym_ptr = sym_start ; sym_ptr < sym_end ; sym_ptr++ )
         if ( dladdr( *sym_ptr, &info ) && info.dli_sname ) {
             printf( "symbol: %s\n", info.dli_sname );
             // if method symbol contains pattern, call it

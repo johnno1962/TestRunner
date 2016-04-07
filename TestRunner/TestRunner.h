@@ -11,7 +11,7 @@
 // Thanks to Jay Freeman's https://www.youtube.com/watch?v=Ii-02vhsdVk
 // actual version of struct is in "include/swift/Runtime/Metadata.h"
 
-typedef void (*SIMP)( id );
+//typedef void (*SIMP)( id );
 
 struct ClassMetadata {
 
@@ -51,7 +51,7 @@ struct ClassMetadata {
 
     /// A function for destroying instance variables, used to clean up
     /// after an early return from a constructor.
-    SIMP dispatch[2];
+    IMP dispatch[2];
 };
 
 extern void callMethodsMatchingPattern( id object, const char *pattern );
