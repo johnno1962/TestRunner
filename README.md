@@ -7,6 +7,7 @@ Class has vtable (dispatch) for Swift methods. Symbol name for function can be d
 
 Pure Swift version tested and works on Linux...
 
+    $ # on Linux remove eveything other than *.swift
     $ swift build -Xlinker -export-dyanmic
     $ ./build/debug/TestRunner
     setUp 0
