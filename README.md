@@ -13,6 +13,7 @@ class Tests {
     let ivar = 999
 
     func setUp() {
+        ivar = 0
         print( "setUp \(ivar)" )
     }
 
@@ -21,6 +22,7 @@ class Tests {
     }
 
     func testThing1() {
+        ivar += 1
         print( "testThing1 \(ivar)" )
     }
 
@@ -29,6 +31,7 @@ class Tests {
     }
 
     func testThing2() {
+        ivar += 1
         print( "testThing2 \(ivar)" )
     }
 
@@ -37,6 +40,7 @@ class Tests {
     }
 
     func testThing3() {
+        ivar += 1
         print( "testThing3 \(ivar)" )
     }
 
@@ -45,26 +49,50 @@ class Tests {
 
 Calling:
 ```Swift
-    let test = Tests()
-    test.setUp()
-    callMethodsMatchingPattern( test, "^_TFC\\d+TestRunner\\d+Tests\\d+test" )
-    test.tearDown()
+let test = Tests()
+
+test.setUp()
+callMethodsMatchingPattern(test, "^_TFC\\d+TestRunner\\d+Tests\\d+test")
+test.tearDown()
+
+test.setUp()
+callMethodsMatchingPatternSwift(test, "^_TFC\\d+TestRunner\\d+Tests\\d+test")
+test.tearDown()
 ```
     
 Output is:
 
-    setUp 999
+    setUp 0
+    symbol: _TFC10TestRunner5Testsg4ivarSi
+    symbol: _TFC10TestRunner5Testss4ivarSi
+    symbol: _TFC10TestRunner5Testsm4ivarSi
     symbol: _TFC10TestRunner5Tests5setUpfT_T_
     symbol: _TFC10TestRunner5Tests8tearDownfT_T_
     symbol: _TFC10TestRunner5Tests10testThing1fT_T_
-    testThing1 999
+    testThing1 1
     symbol: _TFC10TestRunner5Tests16someOtherMethod1fT_T_
     symbol: _TFC10TestRunner5Tests10testThing2fT_T_
-    testThing2 999
+    testThing2 2
     symbol: _TFC10TestRunner5Tests16someOtherMethod2fT_T_
     symbol: _TFC10TestRunner5Tests10testThing3fT_T_
-    testThing3 999
+    testThing3 3
     symbol: _TFC10TestRunner5TestscfT_S0_
-    tearDown 999
+    tearDown 3
+    setUp 0
+    symbol: _TFC10TestRunner5Testsg4ivarSi
+    symbol: _TFC10TestRunner5Testss4ivarSi
+    symbol: _TFC10TestRunner5Testsm4ivarSi
+    symbol: _TFC10TestRunner5Tests5setUpfT_T_
+    symbol: _TFC10TestRunner5Tests8tearDownfT_T_
+    symbol: _TFC10TestRunner5Tests10testThing1fT_T_
+    testThing1 1
+    symbol: _TFC10TestRunner5Tests16someOtherMethod1fT_T_
+    symbol: _TFC10TestRunner5Tests10testThing2fT_T_
+    testThing2 2
+    symbol: _TFC10TestRunner5Tests16someOtherMethod2fT_T_
+    symbol: _TFC10TestRunner5Tests10testThing3fT_T_
+    testThing3 3
+    symbol: _TFC10TestRunner5TestscfT_S0_
+    tearDown 3
 
 Should work on Linux, callMethodsMatchingPattern() would live in stdlib or xctest. MIT Licensed.

@@ -13,6 +13,7 @@
 		BB2D1EF11CB2340A00F94D26 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB2D1EF01CB2340A00F94D26 /* Assets.xcassets */; };
 		BB2D1EF41CB2340A00F94D26 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB2D1EF21CB2340A00F94D26 /* LaunchScreen.storyboard */; };
 		BB2D1EFE1CB2345A00F94D26 /* TestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = BB2D1EFD1CB2345A00F94D26 /* TestRunner.m */; };
+		BB6548E41CB6620F008D547C /* TestRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB6548E31CB6620F008D547C /* TestRunner.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		BB2D1EFB1CB2345A00F94D26 /* TestRunner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TestRunner-Bridging-Header.h"; sourceTree = "<group>"; };
 		BB2D1EFC1CB2345A00F94D26 /* TestRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestRunner.h; sourceTree = "<group>"; };
 		BB2D1EFD1CB2345A00F94D26 /* TestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestRunner.m; sourceTree = "<group>"; };
+		BB6548E31CB6620F008D547C /* TestRunner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestRunner.swift; sourceTree = "<group>"; };
 		BBCA84CA1CB23A2200C903AD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -62,6 +64,7 @@
 			children = (
 				BB2D1EFC1CB2345A00F94D26 /* TestRunner.h */,
 				BB2D1EFD1CB2345A00F94D26 /* TestRunner.m */,
+				BB6548E31CB6620F008D547C /* TestRunner.swift */,
 				BB2D1EE91CB2340A00F94D26 /* AppDelegate.swift */,
 				BB2D1EEB1CB2340A00F94D26 /* ViewController.swift */,
 				BB2D1EED1CB2340A00F94D26 /* Main.storyboard */,
@@ -145,6 +148,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BB2D1EEC1CB2340A00F94D26 /* ViewController.swift in Sources */,
+				BB6548E41CB6620F008D547C /* TestRunner.swift in Sources */,
 				BB2D1EFE1CB2345A00F94D26 /* TestRunner.m in Sources */,
 				BB2D1EEA1CB2340A00F94D26 /* AppDelegate.swift in Sources */,
 			);

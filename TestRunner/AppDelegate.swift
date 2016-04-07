@@ -10,9 +10,10 @@ import UIKit
 
 class Tests {
 
-    let ivar = 999
+    var ivar = 999
 
     func setUp() {
+        ivar = 0
         print( "setUp \(ivar)" )
     }
 
@@ -21,6 +22,7 @@ class Tests {
     }
 
     func testThing1() {
+        ivar += 1
         print( "testThing1 \(ivar)" )
     }
 
@@ -29,6 +31,7 @@ class Tests {
     }
 
     func testThing2() {
+        ivar += 1
         print( "testThing2 \(ivar)" )
     }
 
@@ -37,6 +40,7 @@ class Tests {
     }
 
     func testThing3() {
+        ivar += 1
         print( "testThing3 \(ivar)" )
     }
 
@@ -52,8 +56,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
 
         let test = Tests()
+
         test.setUp()
-        callMethodsMatchingPattern( test, "^_TFC\\d+TestRunner\\d+Tests\\d+test" )
+        callMethodsMatchingPattern(test, "^_TFC\\d+TestRunner\\d+Tests\\d+test")
+        test.tearDown()
+
+        test.setUp()
+        callMethodsMatchingPatternSwift(test, "^_TFC\\d+TestRunner\\d+Tests\\d+test")
         test.tearDown()
 
         return true
